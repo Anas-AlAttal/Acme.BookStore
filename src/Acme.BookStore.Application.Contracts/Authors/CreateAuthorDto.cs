@@ -1,0 +1,21 @@
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+
+namespace Acme.BookStore.Authors;
+
+public class CreateAuthorDto
+{
+    [Required]
+    [StringLength(AuthorConsts.MaxNameLength)]
+    public string Name { get; set; } = string.Empty;
+
+    [Required]
+    public DateTime BirthDate { get; set; }
+
+    [Required]
+    public string PhoneNumber { get; set; }
+
+    public string? ShortBio { get; set; }
+    public string Country { get; set; }
+  
+}

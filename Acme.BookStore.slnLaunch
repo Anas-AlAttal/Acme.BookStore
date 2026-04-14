@@ -1,0 +1,11 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "src\\Acme.BookStore.Web\\Acme.BookStore.Web.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]
