@@ -1,15 +1,19 @@
-﻿using System;
+﻿using Acme.BookStore.Authors;
+using Acme.BookStore.Permissions;
+using Acme.BookStore.Settings;
+using Microsoft.AspNetCore.Authorization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
-using Acme.BookStore.Authors;
-using Acme.BookStore.Permissions;
-using Microsoft.AspNetCore.Authorization;
+using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.Features;
+using Volo.Abp.Settings;
 
 namespace Acme.BookStore.Books;
 
@@ -24,13 +28,19 @@ public class BookAppService :
     IBookAppService //implement the IBookAppService
 {
     private readonly IAuthorRepository _authorRepository;
+    private readonly ISettingProvider _settingProvider;
+    private readonly IFeatureChecker _featureChecker;
 
     public BookAppService(
         IRepository<Book, Guid> repository,
-        IAuthorRepository authorRepository)
+        IAuthorRepository authorRepository,
+        ISettingProvider settingProvider,
+        IFeatureChecker featureChecker)
         : base(repository)
     {
         _authorRepository = authorRepository;
+        _settingProvider = settingProvider;
+        _featureChecker = featureChecker;
         GetPolicyName = BookStorePermissions.Books.Default;
         GetListPolicyName = BookStorePermissions.Books.Default;
         CreatePolicyName = BookStorePermissions.Books.Create;
@@ -63,6 +73,12 @@ public class BookAppService :
 
     public override async Task<PagedResultDto<BookDto>> GetListAsync(PagedAndSortedResultRequestDto input)
     {
+        int maxBooksPerPage = await _settingProvider.GetAsync<int>(BookStoreSettingNames.MaxBooksPerPage, defaultValue: 10);
+        if(input.MaxResultCount > maxBooksPerPage || input.MaxResultCount <= 0)
+        {
+            input.MaxResultCount = maxBooksPerPage;
+        }
+
         //Get the IQueryable<Book> from the repository
         var queryable = await Repository.GetQueryableAsync();
 
@@ -124,4 +140,18 @@ public class BookAppService :
 
         return $"book.{sorting}";
     }
-}
+
+    public async Task<string> GetWelcomeMessageAsync()
+    {
+        return await _settingProvider.GetOrNullAsync(BookStoreSettingNames.WelcomeMessage)
+               ?? "Welcome to Acme BookStore!";
+    }
+
+    [RequiresFeature("Acme.BookStore.Lending")]   // طريقة مختصرة
+    public virtual async Task LendBookAsync(Guid bookId)   // يجب أن تكون virtual
+    {
+        // كود الإعارة هنا...
+        await Task.CompletedTask;
+    }
+    
+    }

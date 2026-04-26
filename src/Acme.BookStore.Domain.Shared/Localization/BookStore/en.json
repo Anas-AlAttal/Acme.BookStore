@@ -43,8 +43,11 @@
     "Authors": "Authors",
     "AuthorDeletionConfirmationMessage": "Are you sure to delete the author '{0}'?",
     "BirthDate": "Birth date",
-    "NewAuthor": "New author"
-
+    "NewAuthor": "New author",
+    "MaxBooksPerPage": "Max books per page",
+    "Reporting": "Reporting Feature",
+    "MaxBookCount": "Maximum allowed books",
+    "Lending": "Book Lending"
 
   }
 }

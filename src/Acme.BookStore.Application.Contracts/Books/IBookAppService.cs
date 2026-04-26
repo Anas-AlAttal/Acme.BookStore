@@ -12,6 +12,8 @@ public interface IBookAppService :
         PagedAndSortedResultRequestDto, //Used for paging/sorting
         CreateUpdateBookDto> //Used to create/update a book
 {
+    Task<BookDto> CreateAsync(CreateUpdateBookDto input);
+
     // ADD the NEW METHOD
     Task<ListResultDto<AuthorLookupDto>> GetAuthorLookupAsync();
 }

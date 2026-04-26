@@ -17,7 +17,7 @@ public class BookStoreDbContextFactory : IDesignTimeDbContextFactory<BookStoreDb
         BookStoreEfCoreEntityExtensionMappings.Configure();
 
         var builder = new DbContextOptionsBuilder<BookStoreDbContext>()
-            .UseSqlite(configuration.GetConnectionString("Default"));
+            .UseSqlServer(configuration.GetConnectionString("Default"));
         
         return new BookStoreDbContext(builder.Options);
     }
