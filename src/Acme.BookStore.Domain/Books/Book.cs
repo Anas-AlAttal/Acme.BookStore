@@ -1,10 +1,11 @@
 ﻿using Acme.BookStore.Authors;
 using System;
 using Volo.Abp.Domain.Entities.Auditing;
+using Volo.Abp.MultiTenancy;
 
 namespace Acme.BookStore.Books;
 
-public class Book : AuditedAggregateRoot<Guid>
+public class Book : AuditedAggregateRoot<Guid> , IMultiTenant
 {
     public string Name { get; set; }
 

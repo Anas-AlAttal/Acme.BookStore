@@ -1,10 +1,11 @@
 ﻿using System;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
+using Volo.Abp.MultiTenancy;
 
 namespace Acme.BookStore.Authors;
 
-public class Author : FullAuditedAggregateRoot<Guid>
+public class Author : FullAuditedAggregateRoot<Guid> , IMultiTenant
 {
     public string Name { get; private set; }
     public DateTime BirthDate { get; set; }

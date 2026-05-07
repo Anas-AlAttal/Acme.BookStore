@@ -1,18 +1,17 @@
-﻿using Acme.BookStore.MultiTenancy;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
-    using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Identity;
 using Volo.Abp.MultiTenancy;
-using Volo.Abp.Uow;
+using Acme.BookStore.MultiTenancy;
 using Volo.Saas.Tenants;
 
 namespace Acme.BookStore.Data;
@@ -26,28 +25,18 @@ public class BookStoreDbMigrationService : ITransientDependency
     private readonly ITenantRepository _tenantRepository;
     private readonly ICurrentTenant _currentTenant;
 
-    private readonly ILogger<BookStoreDbMigrationService> _logger;
-    private readonly IUnitOfWorkManager _unitOfWorkManager;
-    private readonly IServiceProvider _serviceProvider;
-
-
     public BookStoreDbMigrationService(
         IDataSeeder dataSeeder,
         ITenantRepository tenantRepository,
         ICurrentTenant currentTenant,
-        IEnumerable<IBookStoreDbSchemaMigrator> dbSchemaMigrators,
-        ILogger<BookStoreDbMigrationService> logger,
-        IUnitOfWorkManager unitOfWorkManager,
-        IServiceProvider serviceProvider)
+        IEnumerable<IBookStoreDbSchemaMigrator> dbSchemaMigrators)
     {
         _dataSeeder = dataSeeder;
         _tenantRepository = tenantRepository;
         _currentTenant = currentTenant;
         _dbSchemaMigrators = dbSchemaMigrators;
-        _logger = logger;
-        _unitOfWorkManager = unitOfWorkManager;
-        _serviceProvider = serviceProvider;
 
+        Logger = NullLogger<BookStoreDbMigrationService>.Instance;
     }
 
     public async Task MigrateAsync()
@@ -59,12 +48,12 @@ public class BookStoreDbMigrationService : ITransientDependency
             return;
         }
 
-        _logger.LogInformation("Started database migrations...");
+        Logger.LogInformation("Started database migrations...");
 
         await MigrateDatabaseSchemaAsync();
         await SeedDataAsync();
 
-        _logger.LogInformation($"Successfully completed host database migrations.");
+        Logger.LogInformation($"Successfully completed host database migrations.");
 
         if (MultiTenancyConsts.IsEnabled)
         {
@@ -93,17 +82,17 @@ public class BookStoreDbMigrationService : ITransientDependency
                     await SeedDataAsync(tenant);
                 }
 
-                _logger.LogInformation($"Successfully completed {tenant.Name} tenant database migrations.");
+                Logger.LogInformation($"Successfully completed {tenant.Name} tenant database migrations.");
             }
 
-            _logger.LogInformation("Successfully completed all database migrations.");
+            Logger.LogInformation("Successfully completed all database migrations.");
         }
-        _logger.LogInformation("You can safely end this process...");
+        Logger.LogInformation("You can safely end this process...");
     }
 
     private async Task MigrateDatabaseSchemaAsync(Tenant? tenant = null)
     {
-        _logger.LogInformation(
+        Logger.LogInformation(
             $"Migrating schema for {(tenant == null ? "host" : tenant.Name + " tenant")} database...");
         
         foreach (var migrator in _dbSchemaMigrators)
@@ -114,7 +103,7 @@ public class BookStoreDbMigrationService : ITransientDependency
 
     private async Task SeedDataAsync(Tenant? tenant = null)
     {
-        _logger.LogInformation($"Executing {(tenant == null ? "host" : tenant.Name + " tenant")} database seed...");
+        Logger.LogInformation($"Executing {(tenant == null ? "host" : tenant.Name + " tenant")} database seed...");
         
         await _dataSeeder.SeedAsync(new DataSeedContext(tenant?.Id)
             .WithProperty(IdentityDataSeedContributor.AdminEmailPropertyName,
@@ -152,7 +141,7 @@ public class BookStoreDbMigrationService : ITransientDependency
         }
         catch (Exception e)
         {
-            _logger.LogWarning("Couldn't determinate if any migrations exist : " + e.Message);
+            Logger.LogWarning("Couldn't determinate if any migrations exist : " + e.Message);
             return false;
         }
     }
@@ -173,7 +162,7 @@ public class BookStoreDbMigrationService : ITransientDependency
 
     private void AddInitialMigration()
     {
-        _logger.LogInformation("Creating initial migration...");
+        Logger.LogInformation("Creating initial migration...");
 
         string argumentPrefix;
         string fileName;
