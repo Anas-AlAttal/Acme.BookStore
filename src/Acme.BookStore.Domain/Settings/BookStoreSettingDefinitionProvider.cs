@@ -17,6 +17,7 @@ public class BookStoreSettingDefinitionProvider : SettingDefinitionProvider
                displayName: L("Setting:SmtpHost"),
                isVisibleToClients: false,
                isEncrypted: false
+               //todo:revejion is visible to clients and is encrypted values
                ));
 
         context.Add(new SettingDefinition(

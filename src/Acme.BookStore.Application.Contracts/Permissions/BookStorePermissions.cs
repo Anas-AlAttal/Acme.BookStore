@@ -31,5 +31,10 @@ public static class BookStorePermissions
         public const string Delete = Default + ".Delete";
     }
 
+    public static class Settings
+    {
+        public const string ManageGlobalSettings = GroupName + ".Settings.ManageGlobal";
+        public const string ManageTenantSettings = GroupName + ".Settings.ManageTenant";
+    }
 
 }

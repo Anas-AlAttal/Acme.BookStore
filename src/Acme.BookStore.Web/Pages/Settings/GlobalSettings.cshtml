@@ -1,0 +1,76 @@
+﻿@page
+@using Acme.BookStore.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<BookStoreResource> L
+@model Acme.BookStore.Web.Pages.Settings.GlobalSettingsModel
+@{
+    ViewData["Title"] = "Global Settings";
+}
+
+<abp-card>
+    <abp-card-header>
+        <h3>
+            <i class="fa fa-globe me-2 text-primary"></i>
+            Global Settings
+        </h3>
+        <small class="text-muted">
+            تطبّق على كل Tenants اللي ما عندهم قيمة خاصة
+        </small>
+    </abp-card-header>
+    <abp-card-body>
+        <form method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">SMTP Host</label>
+                <input asp-for="Settings.SmtpHost"
+                       class="form-control"
+                       placeholder="smtp.gmail.com" />
+                <span asp-validation-for="Settings.SmtpHost"
+                      class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Max Books Count</label>
+                <div class="input-group">
+                    <input asp-for="Settings.MaxBooksCount"
+                           type="number" class="form-control"
+                           min="1" max="10000" />
+                    <span class="input-group-text">كتاب</span>
+                </div>
+                <span asp-validation-for="Settings.MaxBooksCount"
+                      class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Max Upload Size</label>
+                <div class="input-group">
+                    <input asp-for="Settings.MaxUploadSizeMb"
+                           type="number" class="form-control"
+                           min="1" max="500" />
+                    <span class="input-group-text">MB</span>
+                </div>
+                <span asp-validation-for="Settings.MaxUploadSizeMb"
+                      class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Max Authors Count</label>
+                <div class="input-group">
+                    <input asp-for="Settings.MaxAuthorsCount"
+                           type="number" class="form-control"
+                           min="1" max="5000" />
+                    <span class="input-group-text">مؤلف</span>
+                </div>
+                <span asp-validation-for="Settings.MaxAuthorsCount"
+                      class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                <i class="fa fa-save me-1"></i>
+                @L["Save"]
+            </button>
+        </form>
+    </abp-card-body>
+</abp-card>
+

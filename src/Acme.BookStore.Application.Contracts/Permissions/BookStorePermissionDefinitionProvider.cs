@@ -31,6 +31,17 @@ public class BookStorePermissionDefinitionProvider : PermissionDefinitionProvide
             BookStorePermissions.Authors.Delete, L("Permission:Authors.Delete"));
 
 
+        // Settings
+        bookStoreGroup.AddPermission(
+            BookStorePermissions.Settings.ManageGlobalSettings,
+            L("Permission:Settings.ManageGlobal")
+        );
+        bookStoreGroup.AddPermission(
+            BookStorePermissions.Settings.ManageTenantSettings,
+            L("Permission:Settings.ManageTenant")
+        );
+
+
 
     }
 

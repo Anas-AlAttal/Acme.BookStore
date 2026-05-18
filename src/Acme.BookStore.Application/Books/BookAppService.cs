@@ -1,4 +1,5 @@
 ﻿using Acme.BookStore.Authors;
+using Acme.BookStore.Feature;
 using Acme.BookStore.Permissions;
 using Acme.BookStore.Settings;
 using Microsoft.AspNetCore.Authorization;
@@ -9,8 +10,10 @@ using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
+using Volo.Abp.DependencyInjection;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.Features;
 using Volo.Abp.Settings;
 
 namespace Acme.BookStore.Books;
@@ -23,7 +26,8 @@ public class BookAppService :
         Guid, //Primary key of the book entity
         PagedAndSortedResultRequestDto, //Used for paging/sorting
         CreateUpdateBookDto>, //Used to create/update a book
-    IBookAppService //implement the IBookAppService
+    IBookAppService, //implement the IBookAppService
+    ITransientDependency
 
 {
     private readonly IAuthorRepository _authorRepository;
@@ -131,6 +135,7 @@ public class BookAppService :
         return $"book.{sorting}";
     }
 
+    //[RequiresFeature(BookStoreFeatures.MaxBookCount)]
     public async Task<BookDto> CreateAsync(CreateUpdateBookDto input)
     {
         var maxBookCount = await _settingProvider.GetAsync<int>(BookStoreSettings.MaxBooksCount);

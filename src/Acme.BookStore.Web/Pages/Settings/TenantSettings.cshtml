@@ -1,0 +1,120 @@
+﻿@page "{TenantId:guid}"
+@using Acme.BookStore.Localization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<BookStoreResource> L
+@model Acme.BookStore.Web.Pages.Settings.TenantSettingsModel
+@{
+    ViewData["Title"] = $"Settings — {Model.TenantName}";
+}
+
+<abp-card>
+    <abp-card-header>
+        <abp-row>
+            <abp-column size-md="_9">
+                <h3>
+                    <i class="fa fa-building me-2 text-warning"></i>
+                    Settings: <strong class="text-primary">@Model.TenantName</strong>
+                </h3>
+                <small class="text-muted">
+                    الحقول الفارغة سترث القيمة من الـ Global
+                </small>
+            </abp-column>
+            <abp-column size-md="_3" class="text-end">
+                <a asp-page="/Saas/Host/Tenants/Index"
+                       class="btn btn-outline-secondary btn-sm">
+                    <i class="fa fa-arrow-left me-1"></i> Back
+                </a>
+            </abp-column>
+        </abp-row>
+    </abp-card-header>
+    <abp-card-body>
+
+        <div class="alert alert-info mb-4">
+            <i class="fa fa-globe me-1"></i>
+            <strong>Global Values:</strong>
+            SMTP: <code>@Model.GlobalSettings?.SmtpHost</code> |
+            Books: <code>@Model.GlobalSettings?.MaxBooksCount</code> |
+            Upload: <code>@Model.GlobalSettings?.MaxUploadSizeMb MB</code> |
+            Authors: <code>@Model.GlobalSettings?.MaxAuthorsCount</code>
+        </div>
+
+        <form method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="TenantId" />
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">
+                    SMTP Host
+                    <small class="text-muted fw-normal">
+                        (Global: @Model.GlobalSettings?.SmtpHost)
+                    </small>
+                </label>
+                <input asp-for="Settings.SmtpHost"
+                       class="form-control"
+                       placeholder="اتركه فارغاً لاستخدام الـ Global" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">
+                    Max Books Count
+                    <small class="text-muted fw-normal">
+                        (Global: @Model.GlobalSettings?.MaxBooksCount)
+                    </small>
+                </label>
+                <div class="input-group">
+                    <input asp-for="Settings.MaxBooksCount"
+                           type="number" class="form-control"
+                           min="1" max="10000" />
+                    <span class="input-group-text">كتاب</span>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">
+                    Max Upload Size
+                    <small class="text-muted fw-normal">
+                        (Global: @Model.GlobalSettings?.MaxUploadSizeMb MB)
+                    </small>
+                </label>
+                <div class="input-group">
+                    <input asp-for="Settings.MaxUploadSizeMb"
+                           type="number" class="form-control"
+                           min="1" max="500" />
+                    <span class="input-group-text">MB</span>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">
+                    Max Authors Count
+                    <small class="text-muted fw-normal">
+                        (Global: @Model.GlobalSettings?.MaxAuthorsCount)
+                    </small>
+                </label>
+                <div class="input-group">
+                    <input asp-for="Settings.MaxAuthorsCount"
+                           type="number" class="form-control"
+                           min="1" max="5000" />
+                    <span class="input-group-text">مؤلف</span>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa fa-save me-1"></i> @L["Save"]
+                </button>
+                <a asp-page="/Saas/Host/Tenants/Index"
+                       class="btn btn-secondary">
+                    <i class="fa fa-arrow-left me-1"></i> Back
+                </a>
+            </div>
+        </form>
+    </abp-card-body>
+</abp-card>
+
+@section scripts {
+    <abp-script-bundle>
+        <abp-script src="/libs/abp/jquery-validation/jquery.validate.min.js" />
+        <abp-script src="/libs/abp/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js" />
+    </abp-script-bundle>
+}

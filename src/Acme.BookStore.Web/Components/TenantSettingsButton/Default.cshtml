@@ -1,0 +1,14 @@
+﻿@* Components/TenantSettingsButton/Default.cshtml *@
+@using Acme.BookStore.Permissions
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+
+@if ((await AuthorizationService.AuthorizeAsync(
+    BookStorePermissions.Settings.ManageTenantSettings)).Succeeded)
+{
+    <a href="/Settings/GlobalSettings"
+           class="btn btn-primary btn-sm ms-2">
+        <i class="fa fa-cog me-1"></i>
+        BookStore Settings
+    </a>
+}
