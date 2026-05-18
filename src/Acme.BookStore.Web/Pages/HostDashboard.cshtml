@@ -85,21 +85,21 @@
         }
         @if (await WidgetManager.IsGrantedAsync(typeof(SystemHealthViewComponent)))
         {
-            <abp-column size-md="_12" size-lg="_4">
+            <abp-column size-md="_12" size-lg="_4" class="overflow-scrolled">
                 @await Component.InvokeAsync(typeof(SystemHealthViewComponent))
             </abp-column>
         }
 
         @if (await WidgetManager.IsGrantedAsync(typeof(LiveLogsViewComponent)))
         {
-            <abp-column size-md="_12" size-lg="_4">
+            <abp-column size-md="_12" size-lg="_4" class="overflow-scrolled">
                 @await Component.InvokeAsync(typeof(LiveLogsViewComponent))
             </abp-column>
         }
 
         @if (await WidgetManager.IsGrantedAsync(typeof(RecentErrorsViewComponent)))
         {
-            <abp-column size-md="_12" size-lg="_4">
+            <abp-column size-md="_12" size-lg="_4" class="overflow-scrolled">
                 @await Component.InvokeAsync(typeof(RecentErrorsViewComponent))
             </abp-column>
         }

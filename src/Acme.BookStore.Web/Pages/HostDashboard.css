@@ -1,1 +1,5 @@
- 
+.overflow-scrolled {
+    margin-bottom: 1.5rem !important;
+    height: 394px;
+    overflow: auto;
+}
